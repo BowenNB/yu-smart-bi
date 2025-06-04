@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Apr 22 11:01:18 CST 2025
+@default-aliyunmaven-https\://maven.aliyun.com/repository/public/.lastUpdated=1745290878850
+https\://maven.aliyun.com/repository/public/.error=Could not transfer artifact org.projectlombok\:lombok\:pom\:1.18.34 from/to aliyunmaven (https\://maven.aliyun.com/repository/public)\: Connect to archiva-maven-storage-prod.oss-cn-beijing.aliyuncs.com\:443 [archiva-maven-storage-prod.oss-cn-beijing.aliyuncs.com/127.0.0.1] failed\: Connection refused\: getsockopt

@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Apr 21 17:35:59 CST 2025
+spring-boot-starter-tomcat-2.7.2.jar>aliyunmaven=
+spring-boot-starter-tomcat-2.7.2.pom>aliyunmaven=
+spring-boot-starter-tomcat-2.7.2.pom>central=

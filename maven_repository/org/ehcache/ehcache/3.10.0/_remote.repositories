@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Apr 21 17:35:56 CST 2025
+ehcache-3.10.0.jar>aliyunmaven=
+ehcache-3.10.0.pom>aliyunmaven=
+ehcache-3.10.0.pom>central=

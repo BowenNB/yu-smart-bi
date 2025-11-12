@@ -62,13 +62,13 @@ exports[`Login Page should login success 1`] = `
               <span
                 class="ant-pro-form-login-title "
               >
-                Ant Design
+                鱼智能BI
               </span>
             </div>
             <div
               class="ant-pro-form-login-desc "
             >
-              Ant Design is the most influential web design specification in Xihu district
+              鱼智能BI is the most influential web design specification in Xihu district
             </div>
           </div>
           <div
@@ -472,9 +472,9 @@ exports[`Login Page should login success 1`] = `
               href="https://pro.ant.design"
               rel="noreferrer"
               target="_blank"
-              title="Ant Design Pro"
+              title="鱼智能BI Pro"
             >
-              Ant Design Pro
+              鱼智能BI Pro
             </a>
             <a
               class="ant-pro-global-footer-list-link"
@@ -508,9 +508,9 @@ exports[`Login Page should login success 1`] = `
               href="https://ant.design"
               rel="noreferrer"
               target="_blank"
-              title="Ant Design"
+              title="鱼智能BI"
             >
-              Ant Design
+              鱼智能BI
             </a>
           </div>
           <div
@@ -606,13 +606,13 @@ exports[`Login Page should show login form 1`] = `
               <span
                 class="ant-pro-form-login-title "
               >
-                Ant Design
+                鱼智能BI
               </span>
             </div>
             <div
               class="ant-pro-form-login-desc "
             >
-              Ant Design is the most influential web design specification in Xihu district
+              鱼智能BI is the most influential web design specification in Xihu district
             </div>
           </div>
           <div
@@ -1015,9 +1015,9 @@ exports[`Login Page should show login form 1`] = `
               href="https://pro.ant.design"
               rel="noreferrer"
               target="_blank"
-              title="Ant Design Pro"
+              title="鱼智能BI Pro"
             >
-              Ant Design Pro
+              鱼智能BI Pro
             </a>
             <a
               class="ant-pro-global-footer-list-link"
@@ -1051,9 +1051,9 @@ exports[`Login Page should show login form 1`] = `
               href="https://ant.design"
               rel="noreferrer"
               target="_blank"
-              title="Ant Design"
+              title="鱼智能BI"
             >
-              Ant Design
+              鱼智能BI
             </a>
           </div>
           <div

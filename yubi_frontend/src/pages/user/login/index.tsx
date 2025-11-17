@@ -4,6 +4,8 @@ import { userLoginUsingPost } from '@/services/yubi/userController';
 import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { listChartByPageUsingPost } from '@/services/yubi/chartController';
+import { getLoginUserUsingGet } from '@/services/yubi/userController';
+
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -95,7 +97,7 @@ const Login: React.FC = () => {
     });
   });
   const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
+    const userInfo = await getLoginUserUsingGet();
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({

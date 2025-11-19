@@ -4,31 +4,28 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-public class GenChartByAiRequest {
+/**
+ * 文件上传请求
+ *
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ */
+@Data
+public class GenChartByAiRequest implements Serializable {
+    /**
+     * 分析目标
+     */
+    private String goal;
 
     /**
-     * 文件上传请求
-     *
-     * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
-     * @from <a href="https://yupi.icu">编程导航知识星球</a>
+     * 图表名称
      */
-    @Data
-    public class UploadFileRequest implements Serializable {
-        /**
-         * 分析目标
-         */
-        private String goal;
+    private String name;
 
-        /**
-         * 图表名称
-         */
-        private String name;
+    /**
+     * 图表类型
+     */
+    private String chartType;
 
-        /**
-         * 图表类型
-         */
-        private String chartType;
-
-        private static final long serialVersionUID = 1L;
-    }
+    private static final long serialVersionUID = 1L;
 }

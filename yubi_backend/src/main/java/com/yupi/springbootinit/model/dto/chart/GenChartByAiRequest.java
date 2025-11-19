@@ -14,11 +14,20 @@ public class GenChartByAiRequest {
      */
     @Data
     public class UploadFileRequest implements Serializable {
+        /**
+         * 分析目标
+         */
+        private String goal;
 
         /**
-         * 业务
+         * 图表名称
          */
-        private String biz;
+        private String name;
+
+        /**
+         * 图表类型
+         */
+        private String chartType;
 
         private static final long serialVersionUID = 1L;
     }

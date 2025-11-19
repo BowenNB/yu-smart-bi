@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="generator.domain.Chart">
             <id property="id" column="id" />
+            <result property="name" column="goal" />
             <result property="goal" column="goal" />
             <result property="chartData" column="chartData" />
             <result property="chartType" column="chartType" />
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,goal,chartData,chartType,genChart,genResult,
+        id,`name`,goal,chartData,chartType,genChart,genResult,
         userId,createTime,updateTime,isDelete
     </sql>
 </mapper>

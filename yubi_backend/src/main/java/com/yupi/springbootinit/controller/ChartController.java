@@ -231,12 +231,14 @@ public class ChartController {
         }
         Long id = chartQueryRequest.getId();
         String goal = chartQueryRequest.getGoal();
+        String name = chartQueryRequest.getName();
         String chartType = chartQueryRequest.getChartType();
         Long userId = chartQueryRequest.getUserId();
         String sortField = chartQueryRequest.getSortField();
         String sortOrder = chartQueryRequest.getSortOrder();
 
         queryWrapper.eq(id != null && id > 0, "id", id);
+        queryWrapper.like(StringUtils.isNotBlank(name), "name", name);
         queryWrapper.eq(StringUtils.isNotBlank(goal), "goal", goal);
         queryWrapper.eq(StringUtils.isNotBlank(chartType), "chartType", chartType);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
@@ -250,7 +252,7 @@ public class ChartController {
      * 智能分析
      *
      * @param multipartFile
-     * @param uploadFileRequest
+     * @param genChartByAiReqest
      * @param request
      * @return
      */

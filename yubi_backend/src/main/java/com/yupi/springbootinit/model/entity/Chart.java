@@ -19,7 +19,7 @@ public class Chart {
      * id
      */
     @TableId(type = IdType.ASSIGN_ID)
-    private String id;
+    private Long id;
 
     /**
      * 图表名称

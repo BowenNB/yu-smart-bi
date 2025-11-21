@@ -59,6 +59,7 @@ public class ChartController {
      * 创建
      *
      * @param chartAddRequest
+     * uest
      * @param request
      * @return
      */
@@ -259,6 +260,34 @@ public class ChartController {
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
 
+        // 校验
+        // 如果分析目标为空，就抛出请求参数错误异常，并给出提示
+        ThrowUtils.throwIf(StringUtils.isBlank(goal),ErrorCode.PARAMS_ERROR, "目标为空");
+        // 如果名称不为空，并且名称长度大于100，就抛出异常，并给出提示
+        ThrowUtils.throwIf(StringUtils.isBlank(name) && name.length()> 100,ErrorCode.PARAMS_ERROR, "名称过长");
+
+        // 读取到用户上传的 Excel 文件，进行一个处理
+        User loginUser = userService.getLoginUser(request);
+        // 文件目录：
+        String uuid = RandomStringUtils.randomAlphanumeric(8);
+        String filename = uuid + "_" + multipartFile.getOriginalFilename();
+        File file = null;
+        try{
+
+            // 返回可访问的地址
+            return ResultUtils.success("");
+
+        }catch(Exception e){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"上传异常");
+        }finally {
+            if (file != null) {
+                // 删除临时文件
+                boolean delete = file.delete();
+                if (!delete) {
+                    log.error("删除临时文件失败：{}", file.getAbsolutePath());
+                }
+            }
+        }
     }
 
 

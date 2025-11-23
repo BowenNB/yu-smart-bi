@@ -20,6 +20,7 @@ import com.yupi.springbootinit.model.entity.User;
 import com.yupi.springbootinit.model.enums.FileUploadBizEnum;
 import com.yupi.springbootinit.service.ChartService;
 import com.yupi.springbootinit.service.UserService;
+import com.yupi.springbootinit.utils.ExcelUtils;
 import com.yupi.springbootinit.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -58,8 +60,7 @@ public class ChartController {
     /**
      * 创建
      *
-     * @param chartAddRequest
-     * uest
+     * @param chartAddRequest uest
      * @param request
      * @return
      */
@@ -255,40 +256,50 @@ public class ChartController {
      */
     @PostMapping("/gen")
     public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile,
-                                             GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+                                             GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) throws FileNotFoundException {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
 
         // 校验
         // 如果分析目标为空，就抛出请求参数错误异常，并给出提示
-        ThrowUtils.throwIf(StringUtils.isBlank(goal),ErrorCode.PARAMS_ERROR, "目标为空");
+        ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空");
         // 如果名称不为空，并且名称长度大于100，就抛出异常，并给出提示
-        ThrowUtils.throwIf(StringUtils.isBlank(name) && name.length()> 100,ErrorCode.PARAMS_ERROR, "名称过长");
+        ThrowUtils.throwIf(StringUtils.isBlank(name) && name.length() > 100, ErrorCode.PARAMS_ERROR, "名称过长");
 
-        // 读取到用户上传的 Excel 文件，进行一个处理
-        User loginUser = userService.getLoginUser(request);
-        // 文件目录：
-        String uuid = RandomStringUtils.randomAlphanumeric(8);
-        String filename = uuid + "_" + multipartFile.getOriginalFilename();
-        File file = null;
-        try{
+        // 用户输入
+        StringBuilder userInput = new StringBuilder();
+        userInput.append("你是一个数据分析师，接下来我会给你我的分析目标和原始数据，请告诉我分析结论。").append("\n");
+        userInput.append("分析目标：").append(goal).append("\n");
 
-            // 返回可访问的地址
-            return ResultUtils.success("");
+        // 压缩后的数据（把multipartFile传进来，其他的东西先注释）
+        String result = ExcelUtils.excelToCsv(multipartFile);
+        userInput.append("原始数据：").append(result).append("\n");
+        return ResultUtils.success(result);
+//        // 读取到用户上传的 Excel 文件，进行一个处理
+//        User loginUser = userService.getLoginUser(request);
+//        // 文件目录：
+//        String uuid = RandomStringUtils.randomAlphanumeric(8);
+//        String filename = uuid + "_" + multipartFile.getOriginalFilename();
+//        File file = null;
+//        try{
+//
+//            // 返回可访问的地址
+//            return ResultUtils.success("");
+//
+//        }catch(Exception e){
+//            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"上传异常");
+//        }finally {
+//            if (file != null) {
+//                // 删除临时文件
+//                boolean delete = file.delete();
+//                if (!delete) {
+//                    log.error("删除临时文件失败：{}", file.getAbsolutePath());
+//                }
+//            }
+//        }
+//    }
 
-        }catch(Exception e){
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"上传异常");
-        }finally {
-            if (file != null) {
-                // 删除临时文件
-                boolean delete = file.delete();
-                if (!delete) {
-                    log.error("删除临时文件失败：{}", file.getAbsolutePath());
-                }
-            }
-        }
+
     }
-
-
 }

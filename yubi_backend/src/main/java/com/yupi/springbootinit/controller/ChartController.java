@@ -27,6 +27,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -276,6 +277,7 @@ public class ChartController {
         String result = ExcelUtils.excelToCsv(multipartFile);
         userInput.append("原始数据：").append(result).append("\n");
         return ResultUtils.success(result);
+    }
 //        // 读取到用户上传的 Excel 文件，进行一个处理
 //        User loginUser = userService.getLoginUser(request);
 //        // 文件目录：
@@ -299,7 +301,4 @@ public class ChartController {
 //            }
 //        }
 //    }
-
-
-    }
 }

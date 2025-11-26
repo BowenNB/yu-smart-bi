@@ -13,6 +13,7 @@ import com.yupi.springbootinit.constant.FileConstant;
 import com.yupi.springbootinit.constant.UserConstant;
 import com.yupi.springbootinit.exception.BusinessException;
 import com.yupi.springbootinit.exception.ThrowUtils;
+import com.yupi.springbootinit.manager.AiManager;
 import com.yupi.springbootinit.model.dto.chart.*;
 import com.yupi.springbootinit.model.dto.file.UploadFileRequest;
 import com.yupi.springbootinit.model.entity.Chart;
@@ -53,6 +54,9 @@ public class ChartController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private AiManager aiManager;
 
     private final static Gson GSON = new Gson();
 
@@ -267,14 +271,48 @@ public class ChartController {
         ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空");
         // 如果名称不为空，并且名称长度大于100，就抛出异常，并给出提示
         ThrowUtils.throwIf(StringUtils.isBlank(name) && name.length() > 100, ErrorCode.PARAMS_ERROR, "名称过长");
+        // 通过response对象拿到用户id（必须登录才能使用）
+        User loginUser = userService.getLoginUser(request);
+
 
         // 用户输入
         StringBuilder userInput = new StringBuilder();
-        userInput.append("你是一个数据分析师，接下来我会给你我的分析目标和原始数据，请告诉我分析结论。").append("\n");
+        userInput.append("分析需求：").append("\n");
+
+        // 拼接分析目标
         userInput.append("分析目标：").append(goal).append("\n");
 
-        // 压缩后的数据（把multipartFile传进来，其他的东西先注释）
-        String result = ExcelUtils.excelToCsv(multipartFile);
+        // 如果图表类型不为空，就拼接图表类型
+        String userGoal = goal;
+        if (StringUtils.isNotBlank(chartType)) {
+            userGoal += "，请使用" +  chartType;
+        }
+        userInput.append(goal).append("\n");
+        userInput.append("原始数据： ").append("\n");
+        // 压缩后的数据（把multipartFile传进来)
+        String csvDate = ExcelUtils.excelToCsv(multipartFile);
+        userInput.append(csvDate).append("\n");
+
+        // 拿到返回的结果
+        String result = aiManager.sendMsgToXingHuo(true, userInput.toString());
+        // 解析结果：先对返回的结果做拆分
+        String[] splits = result.split("'【【【【'");
+        // 拆分后的结果做个校验
+        if(splits.length < 3){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"AI 生成错误");
+        }
+
+        String genChart = splits[1].trim();
+        String genResult = splits[2].trim();
+        // 插入到数据库
+        Chart chart = new Chart();
+        chart.setName(name);
+        chart.setGoal(goal);
+        chart.setChartData(csvDate);
+        chart.setChartType(chartType);
+
+
+
         userInput.append("原始数据：").append(result).append("\n");
         return ResultUtils.success(result);
     }

@@ -19,6 +19,7 @@ import com.yupi.springbootinit.model.dto.file.UploadFileRequest;
 import com.yupi.springbootinit.model.entity.Chart;
 import com.yupi.springbootinit.model.entity.User;
 import com.yupi.springbootinit.model.enums.FileUploadBizEnum;
+import com.yupi.springbootinit.model.vo.BiResponseVO;
 import com.yupi.springbootinit.service.ChartService;
 import com.yupi.springbootinit.service.UserService;
 import com.yupi.springbootinit.utils.ExcelUtils;
@@ -310,11 +311,17 @@ public class ChartController {
         chart.setGoal(goal);
         chart.setChartData(csvDate);
         chart.setChartType(chartType);
+        chart.setGenChart(genChart);
+        chart.setGenResult(genResult);
+        chart.setUserId(loginUser.getId());
+        boolean saveResult = chartService.save(chart);
+        ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图标保存失败");
+        BiResponseVO biResponseVO = new BiResponseVO();
+        biResponseVO.setGenResult(genChart);
+        biResponseVO.setGenResult(genResult);
+        biResponseVO.setChartId(chart.getId());
 
-
-
-        userInput.append("原始数据：").append(result).append("\n");
-        return ResultUtils.success(result);
+        return ResultUtils.success(String.valueOf(biResponseVO));
     }
 //        // 读取到用户上传的 Excel 文件，进行一个处理
 //        User loginUser = userService.getLoginUser(request);

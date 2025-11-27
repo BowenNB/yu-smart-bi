@@ -317,7 +317,7 @@ public class ChartController {
         boolean saveResult = chartService.save(chart);
         ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图标保存失败");
         BiResponseVO biResponseVO = new BiResponseVO();
-        biResponseVO.setGenResult(genChart);
+        biResponseVO.setGenChart(genChart);
         biResponseVO.setGenResult(genResult);
         biResponseVO.setChartId(chart.getId());
 

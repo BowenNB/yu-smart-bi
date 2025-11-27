@@ -39,7 +39,6 @@ public class ExcelUtils {
         List<Map<Integer, String>> list = null;
         try {
             list = EasyExcel.read(multipartFile.getInputStream())
-                    .excelType(ExcelTypeEnum.XLSX)
                     .sheet()
                     .headRowNumber(0)
                     .doReadSync();
@@ -48,25 +47,34 @@ public class ExcelUtils {
         }
         //如果数据为空
         if(CollectionUtils.isEmpty(list)){
-            return "";
+            return "文件数据为空";
         }
         //转换为csv
-        StringBuilder stringbuilder = new StringBuilder();
-        //读取表头（第一行）
-        LinkedHashMap<Integer, String> headerMap = (LinkedHashMap<Integer, String>) list.get(0);
-        List<String> headerList = headerMap.values().stream().filter(ObjectUtils::isNotEmpty)
-                .collect(Collectors.toList());
-        stringbuilder.append(StringUtils.join(String.valueOf(headerList),",")).append("\n");
-        //读取数据
-        for(int i=1;i<list.size();i++){
-            LinkedHashMap<Integer, String> dataMap = (LinkedHashMap<Integer, String>) list.get(i);
-            List<String> datalist = dataMap.values().stream().filter(ObjectUtils::isNotEmpty).collect(Collectors.toList());
-            stringbuilder.append(StringUtils.join(String.valueOf(datalist),",")).append("\n");
+        StringBuilder csvbuilder = new StringBuilder();
+//        //读取表头（第一行）
+//        LinkedHashMap<Integer, String> headerMap = (LinkedHashMap)list.get(0);
+//        List<String> headerList = headerMap.values().stream().filter(ObjectUtils::isNotEmpty)
+//                .collect(Collectors.toList());
+//        stringbuilder.append(StringUtils.join(headerList)).append("\n");
+//        //读取数据
+//        for(int i=1;i<list.size();i++){
+//            LinkedHashMap<Integer, String> dataMap = (LinkedHashMap) list.get(i);
+//            List<String> datalist = dataMap.values().stream().filter(ObjectUtils::isNotEmpty)
+//                    .collect(Collectors.toList());
+//            stringbuilder.append(StringUtils.join(datalist)).append("\n");
+//        }
+        // 正确拼接CSV
+        for (Map<Integer, String> rowMap : list) {
+            // 提取每行的 value 值，过滤空值，用逗号拼接
+            String row = rowMap.values().stream()
+                    .filter(ObjectUtils::isNotEmpty).collect(Collectors.joining(","));
+            csvbuilder.append(row).append("\n");
         }
-        return stringbuilder.toString();
+        return csvbuilder.toString();
     }
 
     public static void main(String[] args) throws FileNotFoundException {
         excelToCsv(null);
     }
+
 }

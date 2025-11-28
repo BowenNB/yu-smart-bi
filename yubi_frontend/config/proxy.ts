@@ -21,6 +21,15 @@ export default {
   //     changeOrigin: true,
   //   },
   // },
+  dev: {
+    // 将本地开发端口的接口代理到后端服务，避免跨域问题
+    '/api/': {
+      target: 'http://localhost:8080',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
+
   /**
    * @name 详细的代理配置
    * @doc https://github.com/chimurai/http-proxy-middleware

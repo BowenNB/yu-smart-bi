@@ -15,6 +15,14 @@ export default [
       { component: '404', path: '/user/*' },
     ],
   },
+  // 新增根级别路由（与 /user 同级）
+  { path: '/', redirect: '/add_chart'},
+  {
+    name: '添加图表页',
+    path: '/add_chart',
+    icon: 'smile',
+    component: './AddChart',
+  },
   {
     path: '/dashboard',
     name: 'Dashboard',

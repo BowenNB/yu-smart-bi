@@ -5,12 +5,34 @@ import { Button, Form, Input, Select, Space, Upload, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react';
 import { genChartByAiUsingPost } from '@/services/yubi/chartController';
+import ReactECharts from 'echarts-for-react';
 
 /**
  * 添加图表页面
  */
 
 const AddChart: React.FC = () => {
+
+  const options = {
+    grid: { top: 8, right: 8, bottom: 24, left: 36 },
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line',
+        smooth: true,
+      },
+    ],
+    tooltip: {
+      trigger: 'axis',
+    },
+  };
 
   useEffect(() => {
     listChartByPageUsingPost({}).then((res) => {
@@ -37,7 +59,6 @@ const AddChart: React.FC = () => {
       } catch (e: any) {
         message.error('分析失败,' + e.message);
       }
-
   };
 
   return (
@@ -100,6 +121,14 @@ const AddChart: React.FC = () => {
       </Space>
     </Form.Item>
   </Form>
+
+  <div>
+    生成图表:
+    {
+      chart?.genChart && <ReactECharts option={option} />
+    }
+  </div>
+
     </div>
   );
 };

@@ -66,43 +66,6 @@ export default [
     ],
   },
   {
-    path: '/list',
-    icon: 'table',
-    name: '列表页',
-    routes: [
-      {
-        path: '/list/search',
-        name: '搜索列表',
-        component: './list/search',
-        routes: [
-          { path: '/list/search', redirect: '/list/search/articles' },
-          {
-            name: '搜索列表（文章）',
-            icon: 'smile',
-            path: '/list/search/articles',
-            component: './list/search/articles',
-          },
-          {
-            name: '搜索列表（项目）',
-            icon: 'smile',
-            path: '/list/search/projects',
-            component: './list/search/projects',
-          },
-          {
-            name: '搜索列表（应用）',
-            icon: 'smile',
-            path: '/list/search/applications',
-            component: './list/search/applications',
-          },
-        ],
-      },
-      { path: '/list', redirect: '/list/table-list' },
-      { name: '查询表格', icon: 'smile', path: '/list/table-list', component: './table-list' },
-      { name: '标准列表', icon: 'smile', path: '/list/basic-list', component: './list/basic-list' },
-      { name: '卡片列表', icon: 'smile', path: '/list/card-list', component: './list/card-list' },
-    ],
-  },
-  {
     path: '/profile',
     name: '详情页',
     icon: 'profile',

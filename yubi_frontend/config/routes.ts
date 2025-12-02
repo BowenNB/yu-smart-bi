@@ -18,12 +18,13 @@ export default [
   // 新增根级别路由（与 /user 同级）
   { path: '/', redirect: '/add_chart'},
   {
-    name: '添加图表页',
+    name: '智能分析',
     path: '/add_chart',
-    icon: 'smile',
+    icon: 'barChart',
     component: './AddChart',
   },
-  {
+  { name:'我的图表',path: '/my_chart', icon: 'pieChart', component: './MyChart' },
+   {
     path: '/dashboard',
     name: 'Dashboard',
     icon: 'dashboard',

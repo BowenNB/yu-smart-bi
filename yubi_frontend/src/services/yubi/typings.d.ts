@@ -1,4 +1,10 @@
 declare namespace API {
+  type BaseResponseBiResponseVO_ = {
+    code?: number;
+    data?: BiResponseVO;
+    message?: string;
+  };
+
   type BaseResponseBoolean_ = {
     code?: number;
     data?: boolean;
@@ -81,6 +87,12 @@ declare namespace API {
     code?: number;
     data?: UserVO;
     message?: string;
+  };
+
+  type BiResponseVO = {
+    chartId?: number;
+    genChart?: string;
+    genResult?: string;
   };
 
   type Chart = {

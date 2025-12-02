@@ -80,7 +80,7 @@ export async function genChartByAiUsingPost(
     }
   });
 
-  return request<API.BaseResponseString_>("/api/chart/gen", {
+  return request<API.BaseResponseBiResponseVO_>("/api/chart/gen", {
     method: "POST",
     params: {
       ...params,

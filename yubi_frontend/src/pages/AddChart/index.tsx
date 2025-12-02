@@ -40,6 +40,9 @@ const AddChart: React.FC = () => {
     });
   });
 
+  // 定义状态，用来接收后端的返回值，让它实时展示在页面上
+  const [chart, setChart] = useState<API.BiResponseVO>();
+
   const onFinish = async (values: any) => {
     // todo 对接后端，上传数据
     const params = {
@@ -123,11 +126,12 @@ const AddChart: React.FC = () => {
   </Form>
 
   <div>
-    生成图表:
-    {
-      chart?.genChart && <ReactECharts option={option} />
-    }
-  </div>
+     分析结论：{chart?.genResult}
+     </div>
+     <div>
+     生成图表：
+     <ReactECharts option={options} />
+     </div>
 
     </div>
   );

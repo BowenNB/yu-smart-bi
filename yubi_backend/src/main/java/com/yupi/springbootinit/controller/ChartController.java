@@ -261,7 +261,7 @@ public class ChartController {
      * @return
      */
     @PostMapping("/gen")
-    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile,
+    public BaseResponse<BiResponseVO> genChartByAi(@RequestPart("file") MultipartFile multipartFile,
                                              GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) throws FileNotFoundException {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
@@ -321,7 +321,7 @@ public class ChartController {
         biResponseVO.setGenResult(genResult);
         biResponseVO.setChartId(chart.getId());
 
-        return ResultUtils.success(String.valueOf(biResponseVO));
+        return ResultUtils.success(biResponseVO);
     }
 //        // 读取到用户上传的 Excel 文件，进行一个处理
 //        User loginUser = userService.getLoginUser(request);

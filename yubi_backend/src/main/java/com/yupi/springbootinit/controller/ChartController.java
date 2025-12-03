@@ -1,5 +1,6 @@
 package com.yupi.springbootinit.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
@@ -37,6 +38,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -272,9 +274,39 @@ public class ChartController {
         ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空");
         // 如果名称不为空，并且名称长度大于100，就抛出异常，并给出提示
         ThrowUtils.throwIf(StringUtils.isBlank(name) && name.length() > 100, ErrorCode.PARAMS_ERROR, "名称过长");
+
+
+        /**
+         * 检验文件的大小
+         *
+         * 首先，拿到用户请求的文件；
+         * 取到原始文件的大小
+         */
+        long size = multipartFile.getSize();
+        // 取到原始文件名
+        String originalFilename = multipartFile.getOriginalFilename();
+
+        /**
+         * 检验文件的大小
+         *
+         * 定义一个常量表示 1MB；
+         * 一兆（1M）= 1024*1024字节（Byte）= 2的20次方字节；
+         */
+        final long ONE_MB = 1024 * 1024L;
+        ThrowUtils.throwIf(size > ONE_MB, ErrorCode.PARAMS_ERROR, "文件超过 1M");
+
+        /**
+         * 检验文件的后缀（一般文件是aaa.png，我们要取到.<点>后面的内容）
+         *
+         * 利用FileUtil工具类中的getSuffix方法，可以获取到文件的后缀；
+         */
+        String suffix = FileUtil.getSuffix(originalFilename)    ;
+        final List<String> validFileSuffixList = Arrays.asList("png", "jpg", "svg", "webp", "jpeg");
+        // 如果后缀不在 validFileSuffixList 列表中，就抛出异常，并给出提示
+        ThrowUtils.throwIf(!validFileSuffixList.contains(suffix), ErrorCode.PARAMS_ERROR, "文件后缀非法");
+
         // 通过response对象拿到用户id（必须登录才能使用）
         User loginUser = userService.getLoginUser(request);
-
 
         // 用户输入
         StringBuilder userInput = new StringBuilder();

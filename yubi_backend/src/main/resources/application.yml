@@ -53,6 +53,7 @@ server:
       cookie:
         max-age: 2592000
 mybatis-plus:
+  mapper-locations: classpath:com/yupi/springbootinit/generator/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

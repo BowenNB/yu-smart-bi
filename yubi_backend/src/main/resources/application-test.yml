@@ -25,3 +25,5 @@ spring:
     uris: http://localhost:9200
     username: root
     password: 123456
+    mybatis-plus:
+      mapper-locations: classpath:/generator/mapper/*.xml

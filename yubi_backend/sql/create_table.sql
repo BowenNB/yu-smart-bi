@@ -34,3 +34,12 @@ create table if not exists chart
     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete     tinyint      default 0                 not null comment '是否删除'
 ) comment '图表信息表' collate = utf8mb4_unicode_ci;
+
+-- 图表模板表
+create table if not exists chart_1993964361461948418
+(
+    id           bigint auto_increment comment 'id' primary key,
+    `date`           varchar(10) not null comment '日期',
+    userCount     int null comment '用户数量'
+
+) comment '图表模板表' collate = utf8mb4_unicode_ci;

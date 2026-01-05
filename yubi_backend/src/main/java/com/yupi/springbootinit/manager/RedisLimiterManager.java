@@ -6,18 +6,20 @@ import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 /**
  *  专门提供 RedisLimiter 限流基础服务的（提供了通用的能力，放其他项目都能用）
  */
+@Service
 public class RedisLimiterManager {
 
     @Resource
     private RedissonClient redissonClient;
 
-    public void daRateLimit(String key){
+    public void doRateLimit(String key){
         // 创建一个名为user_limiter的限流器，每秒最多访问2次
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(key);
         // 限流器的统计规则（每秒2个请求；连续的请求，最多只能有1个请求被允许通过）

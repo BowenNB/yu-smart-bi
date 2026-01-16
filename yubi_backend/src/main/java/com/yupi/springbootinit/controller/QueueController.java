@@ -35,6 +35,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -53,8 +54,37 @@ public class QueueController {
     public void add(String name){
         // 使用CompletableFuture运行一个异步任务
         CompletableFuture.runAsync(() -> {
+            // 打印一条日志信息，包括任务名称和执行线程的名称
+            log.info("任务执行中：" + name + "，执行人：" + Thread.currentThread().getName());
+            try {
+                // 让线程休眠10分钟，模拟长时间运行的任务
+                Thread.sleep(600000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // 异步任务在threadPoolExecutor中执行
+        }, threadPoolExecutor);
+    }
 
-        })
+    @GetMapping("/get")
+    // 该方法返回线程池的状态信息
+    public void get(){
+        // 创建一个HashMap存储线程池的状态信息
+        HashMap<String, Object> map = new HashMap<>();
+        // 获取线程池的队列长度
+        int size = threadPoolExecutor.getQueue().size();
+        // 将队列长度放入map中
+        map.put("队列长度",size);
+        // 获取线程池已接收的任务总数
+        long taskCount = threadPoolExecutor.getTaskCount();
+        // 将任务总数放入map中
+        map.put("任务总数",taskCount);
+        // 获取线程池已完成的任务数
+        long completedTaskCount = threadPoolExecutor.getCompletedTaskCount();
+        // 将已完成的任务数放入map中
+        map.put("已完成")
+
+    }
 
     }
 

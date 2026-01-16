@@ -151,3 +151,6 @@ application-prod.yml
 application-test.yml
 
 
+maven_repository/
+*.jar
+target/

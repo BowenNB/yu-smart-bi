@@ -1,42 +1,11 @@
 package com.yupi.springbootinit.controller;
 
-import cn.hutool.core.io.FileUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.Gson;
-import com.sun.corba.se.spi.orbutil.threadpool.ThreadPoolManager;
-import com.yupi.springbootinit.annotation.AuthCheck;
-import com.yupi.springbootinit.common.BaseResponse;
-import com.yupi.springbootinit.common.DeleteRequest;
-import com.yupi.springbootinit.common.ErrorCode;
-import com.yupi.springbootinit.common.ResultUtils;
-import com.yupi.springbootinit.constant.CommonConstant;
-import com.yupi.springbootinit.constant.UserConstant;
-import com.yupi.springbootinit.exception.BusinessException;
-import com.yupi.springbootinit.exception.ThrowUtils;
-import com.yupi.springbootinit.manager.AiManager;
-import com.yupi.springbootinit.manager.RedisLimiterManager;
-import com.yupi.springbootinit.model.dto.chart.*;
-import com.yupi.springbootinit.model.entity.Chart;
-import com.yupi.springbootinit.model.entity.User;
-import com.yupi.springbootinit.model.vo.BiResponseVO;
-import com.yupi.springbootinit.service.ChartService;
-import com.yupi.springbootinit.service.UserService;
-import com.yupi.springbootinit.utils.ExcelUtils;
-import com.yupi.springbootinit.utils.SqlUtils;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -68,7 +37,7 @@ public class QueueController {
 
     @GetMapping("/get")
     // 该方法返回线程池的状态信息
-    public void get(){
+    public String get(){
         // 创建一个HashMap存储线程池的状态信息
         HashMap<String, Object> map = new HashMap<>();
         // 获取线程池的队列长度
@@ -82,10 +51,12 @@ public class QueueController {
         // 获取线程池已完成的任务数
         long completedTaskCount = threadPoolExecutor.getCompletedTaskCount();
         // 将已完成的任务数放入map中
-        map.put("已完成")
-
+        map.put("已完成任务数",completedTaskCount);
+        // 获取线程中正在执行任务的线程数
+        int activeCount = threadPoolExecutor.getActiveCount();
+        // 将正在工作的线程数放入Map中
+        map.put("正在工作的线程数", activeCount);
+        // 将map转为JSON字符串并返回
+        return JSONUtil.toJsonStr(map);
     }
-
-    }
-
 }

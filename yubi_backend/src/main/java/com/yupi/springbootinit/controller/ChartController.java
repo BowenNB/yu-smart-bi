@@ -304,8 +304,9 @@ public class ChartController {
          *
          * 利用FileUtil工具类中的getSuffix方法，可以获取到文件的后缀；
          */
-        String suffix = FileUtil.getSuffix(originalFilename)    ;
-        final List<String> validFileSuffixList = Arrays.asList("png", "jpg", "svg", "webp", "jpeg");
+        String suffix = FileUtil.getSuffix(originalFilename);
+
+        final List<String> validFileSuffixList = Arrays.asList("xlsx","xls");
         // 如果后缀不在 validFileSuffixList 列表中，就抛出异常，并给出提示
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix), ErrorCode.PARAMS_ERROR, "文件后缀非法");
 

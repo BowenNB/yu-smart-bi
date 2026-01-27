@@ -2,6 +2,7 @@ package com.yupi.springbootinit.controller;
 
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @RestController
 @RequestMapping("/queue")
 @Slf4j
+@Profile({"dev","local"})
 public class QueueController {
     @Resource
     // 自动注入一个线程池的实例

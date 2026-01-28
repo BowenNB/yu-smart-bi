@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 帖子接口
@@ -332,11 +333,21 @@ public class ChartController {
         // 压缩后的数据（把multipartFile传进来)
         String csvDate = ExcelUtils.excelToCsv(multipartFile);
         userInput.append(csvDate).append("\n");
+        // 先把图表保存到数据库中
+        Chart chart = new Chart();
+        chart.setName(name);
+        chart.setGoal(goal);
+        chart.setChartData(csvDate);
+        chart.setChartType(chartType);
+        // 设置任务状态为排队中
+        chart.setStatus("wait");
+        chart.setUserId(loginUser.getId());
+        boolean saveResult = chartService.save(chart);
+        ThrowUtils.throwIf(!saveResult,ErrorCode.SYSTEM_ERROR,"图表保存失败");
 
-        // 拿到返回的结果
-        String result = aiManager.sendMsgToXingHuo(true, userInput.toString());
-        // 解析结果：先对返回的结果做拆分
-        String[] splits = result.split("'【【【【'");
+        // 在最终的返回结果前提交一个任务
+        // todo 建议处理任务队列满了后，抛异常情况（因为提交任务报错了，前端会返回异常）
+
         // 拆分后的结果做个校验
         if(splits.length < 3){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"AI 生成错误");
@@ -344,12 +355,7 @@ public class ChartController {
 
         String genChart = splits[1].trim();
         String genResult = splits[2].trim();
-        // 插入到数据库
-        Chart chart = new Chart();
-        chart.setName(name);
-        chart.setGoal(goal);
-        chart.setChartData(csvDate);
-        chart.setChartType(chartType);
+
         chart.setGenChart(genChart);
         chart.setGenResult(genResult);
         chart.setUserId(loginUser.getId());

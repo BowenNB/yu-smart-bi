@@ -18,6 +18,12 @@ export default [
   // 新增根级别路由（与 /user 同级）
   { path: '/', redirect: '/add_chart'},
   {
+    name: '智能分析（异步）',
+    path: '/add_chart_async',
+    icon: 'barChart',
+    component: './AddChartAsync',
+  },
+  {
     name: '智能分析',
     path: '/add_chart',
     icon: 'barChart',

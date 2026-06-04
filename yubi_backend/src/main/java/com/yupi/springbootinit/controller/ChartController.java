@@ -31,7 +31,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +42,6 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 帖子接口
@@ -69,8 +67,6 @@ public class ChartController {
     private RedisLimiterManager redisLimiterManager;
 
     private final static Gson GSON = new Gson();
-    @Autowired
-    private ThreadPoolExecutor threadPoolExecutor;
 
     // region 增删改查
 
@@ -309,7 +305,8 @@ public class ChartController {
          *
          * 利用FileUtil工具类中的getSuffix方法，可以获取到文件的后缀；
          */
-        String suffix = FileUtil.getSuffix(originalFilename)    ;
+        String suffix = FileUtil.getSuffix(originalFilename);
+
         final List<String> validFileSuffixList = Arrays.asList("xlsx","xls");
         // 如果后缀不在 validFileSuffixList 列表中，就抛出异常，并给出提示
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix), ErrorCode.PARAMS_ERROR, "文件后缀非法");
@@ -336,80 +333,40 @@ public class ChartController {
         // 压缩后的数据（把multipartFile传进来)
         String csvDate = ExcelUtils.excelToCsv(multipartFile);
         userInput.append(csvDate).append("\n");
-
-        // 插入到数据库
+        // 先把图表保存到数据库中
         Chart chart = new Chart();
         chart.setName(name);
         chart.setGoal(goal);
         chart.setChartData(csvDate);
         chart.setChartType(chartType);
-        // 插入数据库时,还没生成结束,把生成结果都去掉
-        //        chart.setGenChart(genChart);
-        //        chart.setGenResult(genResult);
         // 设置任务状态为排队中
         chart.setStatus("wait");
         chart.setUserId(loginUser.getId());
         boolean saveResult = chartService.save(chart);
-        ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图标保存失败");
+        ThrowUtils.throwIf(!saveResult,ErrorCode.SYSTEM_ERROR,"图表保存失败");
 
         // 在最终的返回结果前提交一个任务
-        // todo 建议处理任务队列满了后，抛异常的情况（因为提交任务报错了，前端会返回异常）
-        CompletableFuture.runAsync(()-> {
-            // 先修改图表任务状态为 “执行中”。等执行成功后，修改为 “已完成”、保存执行结果；执行失败后，状态修改为 “失败”，记录任务失败信息。(为了防止同一个任务被多次执行)
-            Chart updateChart = new Chart();
-            updateChart.setId(chart.getId());
-            // 把任务状态改为执行中
-            updateChart.setStatus("执行中");
-            boolean b = chartService.updateById(updateChart);
-            // 如果提交失败（一般情况下，更新失败可能意味着你的数据库出问题了）
-            if(!b){
-                handleChartUpdateError(chart.getId(), "更新图表执行中状态失败");
-                return;
-            }
-            // 调用AI
-            // 拿到返回的结果
-            String result = aiManager.sendMsgToXingHuo(true, userInput.toString());
-            // 解析结果：先对返回的结果做拆分
-            String[] splits = result.split("'【【【【'");
-            // 拆分后的结果做个校验
-            if(splits.length < 3){
-                throw new BusinessException(ErrorCode.SYSTEM_ERROR,"AI 生成错误");
+        // todo 建议处理任务队列满了后，抛异常情况（因为提交任务报错了，前端会返回异常）
 
-            }
-            String genChart = splits[1].trim();
-            String genResult = splits[2].trim();
-            // 调用AI得到结果之后,再更新一次
-            Chart updateChartResult = new Chart();
-            updateChartResult.setId(chart.getId());
-            updateChartResult.setGenChart(genChart);
-            updateChartResult.setGenResult(genResult);
-            updateChartResult.setStatus("succeed");
-            boolean updateResult = chartService.updateById(updateChartResult);
-            if (!updateResult) {
-                handleChartUpdateError(chart.getId(), "更新图表成功状态失败");
-            }
-
-        },threadPoolExecutor);
-
-
-        BiResponseVO biResponseVO = new BiResponseVO();
-        //        biResponseVO.setGenChart(genChart);
-        //        biResponseVO.setGenResult(genResult);
-        biResponseVO.setChartId(chart.getId());
-        return ResultUtils.success(biResponseVO);
-    }
-
-    // 上面的接口很多用到异常，直接定义一个工具类
-    private void handleChartUpdateError(long chartId, String execMessage){
-        Chart updateChartResult = new Chart();
-        updateChartResult.setId(chartId);
-        updateChartResult.setStatus("failed");
-        updateChartResult.setExecMessage(execMessage);
-        boolean updateResult = chartService.updateById(updateChartResult);
-        if(!updateResult){
-            log.error("更新图表失败状态失败" + chartId + "," + execMessage);
+        // 拆分后的结果做个校验
+        if(splits.length < 3){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"AI 生成错误");
         }
 
+        String genChart = splits[1].trim();
+        String genResult = splits[2].trim();
+
+        chart.setGenChart(genChart);
+        chart.setGenResult(genResult);
+        chart.setUserId(loginUser.getId());
+        boolean saveResult = chartService.save(chart);
+        ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图标保存失败");
+        BiResponseVO biResponseVO = new BiResponseVO();
+        biResponseVO.setGenChart(genChart);
+        biResponseVO.setGenResult(genResult);
+        biResponseVO.setChartId(chart.getId());
+
+        return ResultUtils.success(biResponseVO);
     }
 //        // 读取到用户上传的 Excel 文件，进行一个处理
 //        User loginUser = userService.getLoginUser(request);

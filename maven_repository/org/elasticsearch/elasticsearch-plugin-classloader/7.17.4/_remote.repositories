@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Apr 21 17:36:02 CST 2025
+elasticsearch-plugin-classloader-7.17.4.jar>aliyunmaven=
+elasticsearch-plugin-classloader-7.17.4.pom>aliyunmaven=
+elasticsearch-plugin-classloader-7.17.4.pom>central=

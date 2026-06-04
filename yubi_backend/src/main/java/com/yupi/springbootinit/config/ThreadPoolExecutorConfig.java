@@ -1,39 +1,43 @@
 package com.yupi.springbootinit.config;
 
+// 1. 导入正确的TimeUnit（核心修复点）
+import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 
-import java.util.concurrent.*;
-
+/**
+ * 线程池配置类
+ * 修复点：删除错误的TimeUnit导入，添加正确的java.util.concurrent.TimeUnit
+ */
 @Configuration
 public class ThreadPoolExecutorConfig {
+
     @Bean
     public ThreadPoolExecutor threadPoolExecutor() {
-        // creat threadfactory
+        // 自定义线程工厂，给线程命名便于排查问题
         ThreadFactory threadFactory = new ThreadFactory() {
-            // 初始化线程数为 1
-            private int count = 1;
+            private int count = 1; // 线程编号初始值
 
             @Override
-            // 每当线程池需要创建新线程时，就会调用newthread方法
-            // @NotNull Runnable r 表示方法参数 r 应该永远不为null
-            // 如果这个方法被调用的时候传递了一个null参数，就会报错
             public Thread newThread(@NotNull Runnable r) {
-                // 创建一个新的线程
                 Thread thread = new Thread(r);
-                // 给新线程设置一个名称，名称中包含线程数的当前值
-                thread.setName("线程" + count);
-                // 线程数递增
-                count++;
-                // 返回新创建的线程
+                thread.setName("自定义线程-" + count++); // 简化自增写法
                 return thread;
             }
         };
-        // 创建一个新的线程池，线程池核心大小为2，最大线程数为4，
-        // 非核心线程空闲时间为100秒，任务队列为阻塞队列，长度为4，使用自定义的线程工厂创建线程
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 100, TimeUnit.SECONDS, new ArrayBlockingQueue<>(4), threadFactory);
-        // 返回创建的线程池
-        return threadPoolExecutor;
+
+        // 初始化线程池，参数类型完全匹配
+        return new ThreadPoolExecutor(
+                2, // 核心线程数：线程池常驻的最小线程数
+                4, // 最大线程数：线程池允许创建的最大线程数
+                100, // 非核心线程空闲超时时间：超过该时间未使用则销毁
+                TimeUnit.SECONDS, // 此时的TimeUnit是正确的JDK并发包类型
+                new ArrayBlockingQueue<>(4), // 任务队列：容量为4的有界阻塞队列
+                threadFactory // 自定义线程工厂
+        );
     }
 }

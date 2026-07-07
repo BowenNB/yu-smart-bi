@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class MultiProducer {
     // 定义队列名称
-    private static final String TASK_QUEUE_NAME = "multi_queue";
+    private static final String TASK_QUEUE_NAME = "multi_queue_2";
 
     public static void main(String[] argv) throws Exception {
         // 创建一个连接工厂
@@ -33,7 +33,7 @@ public class MultiProducer {
             简单说：这行就是告诉 RabbitMQ「这个队列要按 quorum 类型创建」
              */
             // 声明队列参数，包括队列名称、是否持久化
-            channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
+            channel.queueDeclare(TASK_QUEUE_NAME, false, false, false, null);
             // 创建一个输入扫描器，用于读取控制器输入
             Scanner scanner = new Scanner(System.in);
             // 使用循环，每当用户在控制台输入一行文本，就将其作为消息发送

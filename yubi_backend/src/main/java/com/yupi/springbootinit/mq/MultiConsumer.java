@@ -24,7 +24,7 @@ public class MultiConsumer {
           // 从连接获取一个新的通道
           final Channel channel = connection.createChannel();
           // 声明一个队列，并设置属性：队列名称，持久化，非排他，非自动删除，其他删除；如果队列不存在，则创建它
-          channel.queueDeclare(TASK_QUEUE_NAME, false, false, false, null);
+          channel.queueDeclare(TASK_QUEUE_NAME, true, false, false, null);
           // 控制台答打印等待消息的信息
           System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
           // 设置预取计数为1，这样RabbitMQ将不会同时分发多于1条消息给工作者。换句话说，在一个工作者处理并确认当前消息之前，RabbitMQ不会将新的消息分发给它。这有助于实现公平分发，即使某些工作者处理消息的速度较慢，也不会被过多的消息淹没。

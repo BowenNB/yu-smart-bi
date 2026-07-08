@@ -50,7 +50,7 @@ public class MultiConsumer {
                   channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
               }
           };
-          // 开始消费信息，传入队列名称，是否自动确认，投递回调和消费者取消回调
+          // 开始消费信息，传入队列名称，是否自动确认（手动确认消息处理完成），投递回调和消费者取消回调
           channel.basicConsume(TASK_QUEUE_NAME, false, deliverCallback, consumerTag -> {
           });
       }

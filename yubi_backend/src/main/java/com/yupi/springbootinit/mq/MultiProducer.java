@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class MultiProducer {
     // 定义队列名称
-    private static final String TASK_QUEUE_NAME = "multi_queue_2";
+    private static final String TASK_QUEUE_NAME = "multi_queue_3";
 
     public static void main(String[] argv) throws Exception {
         // 创建一个连接工厂

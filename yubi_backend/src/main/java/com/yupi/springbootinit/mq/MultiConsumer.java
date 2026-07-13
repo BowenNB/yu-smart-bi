@@ -10,7 +10,7 @@ import java.util.Map;
 public class MultiConsumer {
 
   // 定义要使用队列的名称，multi_queue
-  private static final String TASK_QUEUE_NAME = "multi_queue_2";
+  private static final String TASK_QUEUE_NAME = "multi_queue_3";
 
   public static void main(String[] argv) throws Exception {
     // 创建一个连接工厂
@@ -38,12 +38,16 @@ public class MultiConsumer {
 
               try {
                   System.out.println(" [x] Received '" + "编号:" + finalI + ":"+ message + "'");
+                  // 发送确认消息，确认消息已经被处理
+                  channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                   // 处理工作，模拟处理消息所花费的时间，机器处理能力有限（接收一条消息，20秒后再接收下一条消息）
                   Thread.sleep(20000);
                   // (不用dowork）模拟
                   // doWork(message);
               } catch (InterruptedException e) {
                   e.printStackTrace();
+                  // 发送异常后，拒绝确认消息，发送拒绝消息，并不重新投递该消息
+                  channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, false);
               } finally {
                   System.out.println(" [x] Done");
                   // 手动发送应答，告诉RabbitMQ消息已被处理

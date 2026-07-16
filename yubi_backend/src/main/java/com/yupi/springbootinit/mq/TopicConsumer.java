@@ -7,7 +7,7 @@ import com.rabbitmq.client.DeliverCallback;
 
 public class TopicConsumer {
 
-  private static final String EXCHANGE_NAME = "topic_logs";
+  private static final String EXCHANGE_NAME = "topic_exchanges";
 
   public static void main(String[] argv) throws Exception {
       // 创建连接工厂对象
@@ -46,22 +46,32 @@ public class TopicConsumer {
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
     // 创建消息处理的回调函数（消费者：员工小a接收）
-    if (argv.length < 1) {
-        System.err.println("Usage: ReceiveLogsTopic [binding_key]...");
-        System.exit(1);
-    }
-
-    for (String bindingKey : argv) {
-        channel.queueBind(queueName3, EXCHANGE_NAME, bindingKey);
-    }
-
-    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-
-    DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-        String message = new String(delivery.getBody(), "UTF-8");
-        System.out.println(" [x] Received '" +
-            delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+    DeliverCallback xiaoadeliverCallback = (consumerTag, delivery) -> {
+      // 获取消息内容和路由键
+      String message = new String(delivery.getBody(), "UTF-8");
+      System.out.println(" [xiaoa] Recieved '" + delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
     };
-    channel.basicConsume(queueName3, true, deliverCallback, consumerTag -> { });
+
+    // 创建消息处理的回调函数（消费者：员工小b接收）
+    DeliverCallback xiaobdeliverCallback = (consumerTag, delivery) -> {
+      // 获取消息内容和路由键
+      String message = new String(delivery.getBody(), "UTF-8");
+      System.out.println(" [xiaob] Recieved '" + delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+    };
+
+    // 创建消息处理的回调函数（消费者：员工小c接收）
+    DeliverCallback xiaocdeliverCallback = (consumerTag, delivery) -> {
+      // 获取消息内容和路由键
+      String message = new String(delivery.getBody(), "UTF-8");
+      System.out.println(" [xiaoc] Recieved '" + delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+    };
+
+    // 启动消费者并绑定消息处理的回调函数到各个队列上
+    // 员工小a处理前端队列接收到的信息
+    channel.basicConsume(queueName, true, xiaoadeliverCallback, consumerTag -> { });
+    // 员工小b处理后端队列接收到的信息
+    channel.basicConsume(queueName2, true, xiaobdeliverCallback, consumerTag -> { });
+    // 员工小c处理产品队列接收到的信息
+    channel.basicConsume(queueName3, true, xiaocdeliverCallback, consumerTag -> { });
   }
 }

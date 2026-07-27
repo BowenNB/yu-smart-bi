@@ -36,7 +36,7 @@ public class TopicConsumer {
     channel.queueBind(queueName2, EXCHANGE_NAME, "#.后端.#");
 
     // 创建后端队列
-    String queueName3 = "backend_queue";
+    String queueName3 = "product_queue";
     // 声明队列，设置队列为持久化的，非独占的，非自动删除的
     channel.queueDeclare(queueName3, true, false, false, null);
     // 将其绑定到主题交换机上，使用路由键模式"#.产品.#"

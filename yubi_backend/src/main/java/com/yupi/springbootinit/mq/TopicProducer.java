@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class TopicProducer {
     // 定义交换机名称为"topic-exchange"
     private static final String EXCHANGE_NAME = "topic_exchanges";
-
     public static void main(String[] argv) throws Exception {
         // 创建连接工厂对象
         ConnectionFactory factory = new ConnectionFactory();

@@ -65,7 +65,7 @@ public class BiMessageConsumer {
             return;
         }
 // 调用 AI
-        String result = aiManager.sendMsgToXingHuo(true, );
+        String result = aiManager.sendMsgToXingHuo(true, "分析需求：" + chart.getGoal() + "\n" + "原始数据：" + chart.getChartData());
         String[] splits = result.split("【【【【【");
         if (splits.length < 3) {
             handleChartUpdateError(chart.getId(), "AI 生成错误");

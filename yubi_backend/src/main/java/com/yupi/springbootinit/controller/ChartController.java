@@ -479,12 +479,9 @@ public class ChartController {
         chart.setUserId(loginUser.getId());
         boolean saveResult = chartService.save(chart);
         ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图表保存失败");
+        Long newChartId = chart.getId();
 
-        // 在最终的返回结果前提交一个任务
-        // todo 建议处理任务队列满了后，抛异常的情况（因为提交任务报错了，前端会返回异常）
-        biMessageProducer.sendMessage();
-
-
+        biMessageProducer.sendMessage(String.valueOf(newChartId));
 
         BiResponseVO biResponse = new BiResponseVO();
         biResponse.setChartId(chart.getId());

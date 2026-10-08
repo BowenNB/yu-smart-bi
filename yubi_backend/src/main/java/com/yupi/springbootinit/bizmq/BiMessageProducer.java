@@ -15,6 +15,7 @@ public class BiMessageProducer {
      * 发送消息的方法
      *
      * @param exchange 交换机名称，指定消息要发送到哪个交换机
+     *
      */
     public void sendMessage(String exchange) {
         // 使用rabbitTemplate的convertAndSend方法将消息发送到指定的交换机和路由键

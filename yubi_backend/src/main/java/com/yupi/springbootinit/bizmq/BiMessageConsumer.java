@@ -92,6 +92,8 @@ public class BiMessageConsumer {
         channel.basicAck(deliveryTag, false);
     }
 
+
+
     private void handleChartUpdateError(long chartId, String execMessage) {
         Chart updateChartResult = new Chart();
         updateChartResult.setId(chartId);

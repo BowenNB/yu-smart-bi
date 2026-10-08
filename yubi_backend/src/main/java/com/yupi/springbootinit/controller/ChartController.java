@@ -445,7 +445,9 @@ public class ChartController {
 //                "{前端 Echarts V5 的 option 配置对象js代码，合理地将数据进行可视化，不要生成任何多余的内容，比如注释}\n" +
 //                "【【【【【\n" +
 //                "{明确的数据分析结论、越详细越好，不要生成多余的注释}";
-        long biModelId = 1659171950288818178L;
+        // long biModelId = 1659171950288818178L;
+        // 指定一个模型id（把id写死，也可以定义成一个常量）
+        long biModelId = CommonConstant.biModelId;
         // 分析需求：
         // 分析网站用户的增长情况
         // 原始数据：
